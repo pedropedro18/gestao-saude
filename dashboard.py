@@ -2,6 +2,27 @@
 import streamlit as st
 import analise, fraude, relatorios
 
+from pathlib import Path
+from db import importar
+
+st.sidebar.header("📤 Carregar dados")
+ficheiros = {
+    "apolices.csv": st.sidebar.file_uploader("Apólices", type="csv"),
+    "beneficiarios.csv": st.sidebar.file_uploader("Beneficiários", type="csv"),
+    "sinistros.csv": st.sidebar.file_uploader("Sinistros", type="csv"),
+}
+if st.sidebar.button("Importar"):
+    if all(ficheiros.values()):
+        Path("dados").mkdir(exist_ok=True)
+        for nome, f in ficheiros.items():
+            (Path("dados") / nome).write_bytes(f.getvalue())
+        rel = importar()
+        st.sidebar.success(f"Importado: {rel}")
+        st.cache_data.clear()
+        st.rerun()
+    else:
+        st.sidebar.error("Carrega os 3 ficheiros.")
+
 st.set_page_config(page_title="Seguro de Saúde", layout="wide")
 st.title("🏥 Análise e Gestão de Seguro de Saúde")
 
