@@ -14,5 +14,5 @@ def detectar(contaminacao=0.03):
     return si[si["suspeito"]].sort_values("score")[
         ["sinistro_id", "beneficiario_id", "prestador", "data", "valor", "freq_benef", "score"]]
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     print(detectar())
